@@ -7,7 +7,7 @@ import json
 ehr_id = configuration.test_ehrid
 service_url = configuration.service_url
 
-url = service_url + ehr_id
+url = service_url + 'ehr/' + ehr_id
 
 print('Retrieving ', url)
 
