@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import configuration
-from openehr_auth import requestor
+
 import urllib.parse, urllib.error
 import json
-
+import configuration
+from openehr_auth import requestor
 ehr_id = configuration.test_ehrid
 service_url = configuration.service_url
 
