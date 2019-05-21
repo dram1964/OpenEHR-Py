@@ -4,11 +4,10 @@ import urllib.parse, urllib.error
 import json
 import configuration
 from openehr_auth import requestor
+
 ehr_id = configuration.test_ehrid
 service_url = configuration.service_url
-
 url = service_url + 'ehr/' + ehr_id
-
 print('Retrieving ', url)
 
 try:
@@ -18,11 +17,12 @@ except urllib.error.HTTPError as e:
     print( 'Reason: ', e.reason )
     print( 'Headers: ', e.headers )
 except urllib.error.URLError as e:
-    print ( 'URL Erorr: ', e.reason )
+    print ( 'URL Error: ', e.reason )
 else:
     data = response.read().decode()
-    print( 'Retrieved ', len(data), ' characters' )
-    
+    print( 'Response Code: %s' % response.getcode() )
+    print( 'Retrieved %s characters' % len(data) )
+
     try:
         js = json.loads(data)
     except:
@@ -31,8 +31,8 @@ else:
     if not js:
         print( 'Error retrieving data' )
         print(data)
-
-    print( json.dumps( js, indent=4 ) )
-
-
-
+    else:
+        print( json.dumps( js, indent=4 ) )
+        print( 'EHRID: ', js['ehrId'] )
+        print( 'Subject Id: ', js['ehrStatus']['subjectId'])
+        print( 'Mofifiable: ', js['ehrStatus']['modifiable'])
