@@ -11,7 +11,7 @@ import json
 from openehr_conf import service_url
 from openehr_rest import requestor
 
-def get_ehr_by_id( ehrid ):
+def get_ehr_by_id( ehrid , debug=False ):
     """
     get_ehr_by_id( ehrid )  -> ehr_json object
 
@@ -20,7 +20,7 @@ def get_ehr_by_id( ehrid ):
     by the supplied ehrid
     """
     url = service_url + 'ehr/' + ehrid
-    print('Retrieving ', url)
+    if debug: print('Retrieving ', url)
 
     try:
         response = requestor.urlopen( url )
@@ -34,8 +34,8 @@ def get_ehr_by_id( ehrid ):
         return None
     else:
         data = response.read().decode()
-        print( 'Response Code: %s' % response.getcode() )
-        print( 'Retrieved %s characters' % len(data) )
+        if debug: print( 'Response Code: %s' % response.getcode() )
+        if debug: print( 'Retrieved %s characters' % len(data) )
 
         try:
             ehr = json.loads(data)
