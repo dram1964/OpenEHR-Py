@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-openehr_auth module
+openehr_rest module
 
 Provides a requestor object to submit Queries 
 to OpenEHR REST API. The requestor object is 

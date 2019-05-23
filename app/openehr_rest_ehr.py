@@ -9,7 +9,7 @@ of an OpenEHR system
 import urllib.parse, urllib.error
 import json
 import openehr_conf
-from openehr_auth import requestor
+from openehr_rest import requestor
 
 service_url = openehr_conf.service_url
 
