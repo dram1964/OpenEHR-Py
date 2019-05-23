@@ -13,11 +13,12 @@ from openehr_rest import requestor
 
 def get_ehr_by_id( ehrid , debug=False ):
     """
-    get_ehr_by_id( ehrid )  -> ehr_json object
+    get_ehr_by_id( ehrid, debug=False )  -> ehr_json object
 
     Sends an erhid to the ehr/{ehrid} endpoint and returns 
     the response as a JSON object representing the EHR identified 
-    by the supplied ehrid
+    by the supplied ehrid. Optional debug argument forces 
+    more output if True
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
