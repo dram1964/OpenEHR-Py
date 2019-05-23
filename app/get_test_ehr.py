@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
-from rest_ehr import get_ehr_by_id
-import configuration
+from openehr_rest_ehr import get_ehr_by_id
+import openehr_conf
 
-ehrid = configuration.test_ehrid
+ehrid = openehr_conf.test_ehrid
 
 ehr = get_ehr_by_id(ehrid)
 

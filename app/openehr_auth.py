@@ -6,17 +6,17 @@ Provides a requestor object to submit Queries
 to OpenEHR REST API. The requestor object is 
 a urllib.request object which has been 
 pre-authenticated to the OpenEHR REST server 
-from values stored in the openehr_configuration module
+from values stored in the openehr_conf module
 """
 
 import urllib.request
-import configuration
+import openehr_conf
 
 requestor = urllib.request
 
-service_url = configuration.service_url
-user_name = configuration.user_name
-password = configuration.password
+service_url = openehr_conf.service_url
+user_name = openehr_conf.user_name
+password = openehr_conf.password
 
 password_mgr = requestor.HTTPPasswordMgrWithDefaultRealm()
 password_mgr.add_password( 'Think!EHR', service_url, user_name, password )

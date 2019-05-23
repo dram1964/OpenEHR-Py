@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-configuration module
+openehr_conf module
 
 Holds configuration parameters for the target EHR server
 """
