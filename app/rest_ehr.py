@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+rest_ehr module
+
+Provides functions for interacting with the REST API
+of an OpenEHR system
+"""
 
 import urllib.parse, urllib.error
 import json
@@ -8,6 +14,13 @@ from openehr_auth import requestor
 service_url = configuration.service_url
 
 def get_ehr_by_id( ehrid ):
+    """
+    get_ehr_by_id( ehrid )  -> ehr_json object
+
+    Submits a query to the OpenEHR REST API. Sends an erhid to the 
+    ehr/{ehrid} endpoint and returns the response as a JSON object
+    representing the EHR identified by the supplied ehrid
+    """
     url = service_url + 'ehr/' + ehrid
     print('Retrieving ', url)
 
