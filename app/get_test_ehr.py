@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-from openehr_rest_ehr import get_ehr_by_id
-from openehr_conf import test_ehrid
+from openehr.rest.ehr import get_ehr_by_id
+from openehr.conf import test_ehrid
 
 for debug in range(2):
     ehr = get_ehr_by_id( test_ehrid, debug )

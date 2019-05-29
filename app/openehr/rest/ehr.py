@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-openehr_rest_ehr module
+openehr.rest.ehr module
 
 Provides functions for interacting with the EHR endpoint
 of an OpenEHR REST API
@@ -8,8 +8,8 @@ of an OpenEHR REST API
 
 import urllib.parse, urllib.error
 import json
-from openehr_conf import service_url
-from openehr_rest import requestor
+from ..conf import service_url
+from .requestor import get_requestor
 
 def get_ehr_by_id( ehrid , debug=False ):
     """
@@ -22,6 +22,7 @@ def get_ehr_by_id( ehrid , debug=False ):
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
+    requestor = get_requestor()
 
     try:
         response = requestor.urlopen( url )

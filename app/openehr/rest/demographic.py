@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-openehr_rest_demographic module
+openehr.rest.demographic module
 
 Provides functions for interacting with the Demographic endpoint
 of an OpenEHR REST API
@@ -8,8 +8,8 @@ of an OpenEHR REST API
 
 import urllib.parse, urllib.error
 import json
-from openehr_conf import service_url
-from openehr_rest import requestor
+from ..conf import service_url
+from .requestor import get_requestor
 
 def get_party_info( ehrid , debug=False ):
     """
@@ -22,6 +22,7 @@ def get_party_info( ehrid , debug=False ):
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     print('Retrieving ', url)
+    requestor = get_requestor()
 
     try:
         response = requestor.urlopen( url )
