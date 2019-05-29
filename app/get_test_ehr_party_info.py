@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-from openehr.rest.ehr import get_ehr_by_id
 from openehr.rest.demographic import get_party_info
 from openehr.conf import test_ehrid
 
