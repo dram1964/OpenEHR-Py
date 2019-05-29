@@ -21,25 +21,40 @@ def get_party_info( ehrid , debug=False ):
     more output if True
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
-    if debug: print('Retrieving ', url)
+    print('Retrieving ', url)
 
     try:
         response = requestor.urlopen( url )
     except urllib.error.HTTPError as e:
-        print( 'HTTP Error: ', e.code )
-        print( 'Reason: ', e.reason )
-        print( 'Headers: ', e.headers )
-        return None
+        return {
+            'error' : e.code,
+            'error_msg' : 'HTTP Error: ' + e.reason,
+            'party' : None,
+            'meta' : None,
+            'action' : None,
+        }
     except urllib.error.URLError as e:
-        print ( 'URL Error: ', e.reason )
-        return None
+        return {
+            'error' : 1,
+            'error_msg' : 'URL Error: ' + e.reason,
+            'party' : None,
+            'meta' : None,
+            'action' : None,
+        }
     else:
         data = response.read().decode()
         if debug: print( 'Response Code: %s' % response.getcode() )
         if debug: print( 'Retrieved %s characters' % len(data) )
 
         try:
-            party = json.loads(data)
-            return party
+            js = json.loads(data)
+            js['error'] = 0
+            return js
         except:
-            return None
+            return { 
+                'error' : 2,
+                'error_msg' : 'Error converting response to JSON',
+                'party' : None,
+                'meta' : None,
+                'action' : None,
+            }
