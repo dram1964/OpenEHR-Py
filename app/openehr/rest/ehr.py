@@ -8,10 +8,8 @@ of an OpenEHR REST API
 
 import urllib.parse, urllib.error
 import json
-#from ..conf import service_url
-#from .requestor import get_requestor
-from openehr.conf import service_url
-from openehr.rest.requestor import get_requestor
+from openehr.conf import service_url, test_ehrid
+from openehr.rest.requestor import get_requestor as _get_requestor
 
 def get_ehr_by_id( ehrid , debug=False ):
     """
@@ -24,7 +22,7 @@ def get_ehr_by_id( ehrid , debug=False ):
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
-    requestor = get_requestor()
+    requestor = _get_requestor()
 
     try:
         response = requestor.urlopen( url )
@@ -46,3 +44,22 @@ def get_ehr_by_id( ehrid , debug=False ):
             return ehr
         except:
             return None
+
+if __name__ == '__main__':
+    import sys
+    import types
+    import ehr
+
+    if len(sys.argv) == 1:
+        for attr in ehr.__dict__:
+            if not attr.startswith('_'):
+                if type(getattr(ehr, attr)) == types.FunctionType:
+                    print("Available functions: ", attr)
+    elif len(sys.argv) == 2:
+        if sys.argv[1] == 'get_ehr_by_id':
+            print( get_ehr_by_id( test_ehrid ) )
+    elif len(sys.argv) == 3:
+        if sys.argv[1] == 'get_ehr_by_id':
+            print( get_ehr_by_id(sys.argv[2]) )
+        else:
+            print('Unknown function: ', sys.argv[1] )
