@@ -10,7 +10,8 @@ from values stored in the openehr_conf module
 """
 
 import urllib.request
-from ..conf import service_url, user_name, password
+from openehr.conf import service_url, user_name, password
+#from ..conf import service_url, user_name, password
 
 def get_requestor():
     requestor = urllib.request

@@ -8,8 +8,10 @@ of an OpenEHR REST API
 
 import urllib.parse, urllib.error
 import json
-from ..conf import service_url
-from .requestor import get_requestor
+#from ..conf import service_url
+#from .requestor import get_requestor
+from openehr.conf import service_url
+from openehr.rest.requestor import get_requestor
 
 def get_party_info( ehrid , debug=False ):
     """
