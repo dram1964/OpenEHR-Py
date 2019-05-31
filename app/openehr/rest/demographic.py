@@ -8,12 +8,10 @@ of an OpenEHR REST API
 
 import urllib.parse, urllib.error
 import json
-#from ..conf import service_url
-#from .requestor import get_requestor
-from openehr.conf import service_url
-from openehr.rest.requestor import get_requestor
+from openehr.conf import service_url, test_ehrid
+from openehr.rest.requestor import get_requestor as _get_requestor
 
-def get_party_info( ehrid , debug=False ):
+def get_party_info( ehrid=test_ehrid , debug=False ):
     """
     get_party_info( ehrid, debug=False )  -> ehr_json object
 
@@ -24,7 +22,7 @@ def get_party_info( ehrid , debug=False ):
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     print('Retrieving ', url)
-    requestor = get_requestor()
+    requestor = _get_requestor()
 
     try:
         response = requestor.urlopen( url )
@@ -61,3 +59,22 @@ def get_party_info( ehrid , debug=False ):
                 'meta' : None,
                 'action' : None,
             }
+
+if __name__ == '__main__':
+    import sys
+    import types
+    import demographic
+
+    if len(sys.argv) == 1:
+        for attr in demographic.__dict__:
+            if not attr.startswith('_'):
+                if type(getattr(demographic, attr)) == types.FunctionType:
+                    print("Available functions: ", attr)
+    elif len(sys.argv) == 2:
+        if sys.argv[1] == 'get_party_info':
+            print( get_party_info() )
+    elif len(sys.argv) == 3:
+        if sys.argv[1] == 'get_party_info':
+            print( get_party_info(sys.argv[2]) )
+        else:
+            print('Unknown function: ', sys.argv[1] )
