@@ -11,7 +11,7 @@ import json
 from openehr.conf import service_url, test_ehrid
 from openehr.rest.requestor import get_requestor as _get_requestor
 
-def get_party_info( ehrid=test_ehrid , debug=False ):
+def get_party_info( ehrid, debug=False ):
     """
     get_party_info( ehrid, debug=False )  -> ehr_json object
 
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                     print("Available functions: ", attr)
     elif len(sys.argv) == 2:
         if sys.argv[1] == 'get_party_info':
-            print( get_party_info() )
+            print( get_party_info( test_ehrid ) )
     elif len(sys.argv) == 3:
         if sys.argv[1] == 'get_party_info':
             print( get_party_info(sys.argv[2]) )
