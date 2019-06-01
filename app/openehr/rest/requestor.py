@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-openehr_rest module
+File: requestor.py 
 
-Provides a requestor object to submit Queries 
-to OpenEHR REST API. The requestor object is 
-a urllib.request object which has been 
-pre-authenticated to the OpenEHR REST server 
-from values stored in the openehr_conf module
+Package module providing a urllib.request object for interacting with 
+the OpenEHR REST API. The requestor object returned by the module
+is pre-authenticated to the OpenEHR server with the user_name
+and password values from the openehr/conf.py file
 """
 
 import urllib.request
@@ -14,6 +13,10 @@ from openehr.conf import service_url, user_name, password
 #from ..conf import service_url, user_name, password
 
 def get_requestor():
+    """
+    Returns a urllib.request object, pre-authenticated to the
+    OpenEHR server specified in the openehr/conf.py file.
+    """
     requestor = urllib.request
 
     password_mgr = requestor.HTTPPasswordMgrWithDefaultRealm()

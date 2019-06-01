@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-File: openehr.conf
+File: openehr.py
+
 Package module holding configuration settings for the
 openehr package. 
+
 Package can be run from the command line:
 python openehr/conf.py [setting[0],...,setting[n]
 With no arguments returns a list of configured settings
@@ -12,6 +14,7 @@ With arguments returns the value for the setting
 test_ehrid = '33b11502-9e5c-41f0-9cea-93b851c85b67'
 test_uid = '1c11d0b2-d9fa-4fac-b5f4-e9b44aa4bf10::default::2'
 test_subject_id = '3333333333'
+default_namespace = 'uk.nhs.nhs_number'
 
 service_url = 'http://thinkehr:8081/rest/v1/'
 user_name  = 'admin'

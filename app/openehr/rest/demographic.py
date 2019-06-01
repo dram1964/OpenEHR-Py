@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """
-openehr.rest.demographic module
+File: demographic.py 
 
-Provides functions for interacting with the Demographic endpoint
-of an OpenEHR REST API
+Package module for interacting with the OpenEHR Demographic API
+
+Package can be run from the command line:
+python openehr/rest/demographic.py functionname [param[0],...,param[n]]
+With no arguments runs the get_party_info function for the test_ehrid
+value defined in the system configuration file (openehr/conf.py).
 """
 
 import urllib.parse, urllib.error
