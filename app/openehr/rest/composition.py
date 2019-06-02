@@ -19,9 +19,13 @@ def get_composition_by_uid( composition_id=test_uid, response_format='FLAT' , in
     """
     get_composition_by_uid( composition_id, format, meta) -> composition_json object
     """
+    data = {
+        'format' : response_format,
+        'meta'   : include_meta
+    }
+    url_values = urllib.parse.urlencode(data)
 
-    #http://localhost:8081/rest/v1/composition/1c11d0b2-d9fa-4fac-b5f4-e9b44aa4bf10%3A%3Adefault%3A%3A2?format=FLAT&meta=true
-    url = service_url + 'composition/' + composition_id + '?format=' + response_format + '&meta=' + include_meta
+    url = service_url + 'composition/' + composition_id + '?' +  url_values
     if debug: print('Retrieving ' + url)
     requestor = _get_requestor()
 
@@ -59,5 +63,15 @@ if __name__ == '__main__':
     elif len(sys.argv) == 3:
         if sys.argv[1] == 'get_composition_by_uid':
             print( get_composition_by_uid(sys.argv[2]) )
+        else:
+            print('Unknown function: ', sys.argv[1] )
+    elif len(sys.argv) == 4:
+        if sys.argv[1] == 'get_composition_by_uid':
+            print( get_composition_by_uid(sys.argv[2], sys.argv[3]) )
+        else:
+            print('Unknown function: ', sys.argv[1] )
+    elif len(sys.argv) == 5:
+        if sys.argv[1] == 'get_composition_by_uid':
+            print( get_composition_by_uid(sys.argv[2], sys.argv[3]), sys.argv[4] )
         else:
             print('Unknown function: ', sys.argv[1] )
