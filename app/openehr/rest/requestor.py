@@ -10,7 +10,6 @@ and password values from the openehr/conf.py file
 
 import urllib.request
 from openehr.conf import service_url, user_name, password
-#from ..conf import service_url, user_name, password
 
 def get_requestor():
     """
