@@ -15,9 +15,10 @@ import json
 from openehr.conf import service_url, test_uid
 from openehr.rest.requestor import get_requestor as _get_requestor
 
-def get_composition_by_uid( composition_id=test_uid, response_format='FLAT' , include_meta='true', debug=1):
+def get_composition_by_uid( composition_id=test_uid, response_format='FLAT', include_meta='true', debug=1):
     """
-    get_composition_by_uid( composition_id, format, meta) -> composition_json object
+    Sends a REST query to composition/{uid}, and returns the JSON response in the requested
+    response_format.
     """
     data = {
         'format' : response_format,
@@ -26,7 +27,7 @@ def get_composition_by_uid( composition_id=test_uid, response_format='FLAT' , in
     url_values = urllib.parse.urlencode(data)
 
     url = service_url + 'composition/' + composition_id + '?' +  url_values
-    if debug: print('Retrieving ' + url)
+    if debug: print('Retrieving', url)
     requestor = _get_requestor()
 
     try:
@@ -57,21 +58,9 @@ if __name__ == '__main__':
             if not attr.startswith('_'):
                 if type(getattr(composition, attr)) == types.FunctionType:
                     print("Available functions: ", attr)
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == 'get_composition_by_uid':
-            print( get_composition_by_uid( ) )
-    elif len(sys.argv) == 3:
-        if sys.argv[1] == 'get_composition_by_uid':
-            print( get_composition_by_uid(sys.argv[2]) )
-        else:
-            print('Unknown function: ', sys.argv[1] )
-    elif len(sys.argv) == 4:
-        if sys.argv[1] == 'get_composition_by_uid':
-            print( get_composition_by_uid(sys.argv[2], sys.argv[3]) )
-        else:
-            print('Unknown function: ', sys.argv[1] )
-    elif len(sys.argv) == 5:
-        if sys.argv[1] == 'get_composition_by_uid':
-            print( get_composition_by_uid(sys.argv[2], sys.argv[3]), sys.argv[4] )
-        else:
-            print('Unknown function: ', sys.argv[1] )
+    try:
+        func = getattr(composition, sys.argv[1])
+    except:
+        print('Error, unknown function: ', sys.argv[1])
+    else:
+        print( getattr(composition, sys.argv[1])(*sys.argv[2:] ) )
