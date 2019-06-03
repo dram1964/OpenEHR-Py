@@ -25,7 +25,7 @@ def get_party_info( ehrid, debug=False ):
     more output if True
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
-    print('Retrieving ', url)
+    if debug: print('Retrieving ', url)
     requestor = _get_requestor()
 
     try:
@@ -74,11 +74,10 @@ if __name__ == '__main__':
             if not attr.startswith('_'):
                 if type(getattr(demographic, attr)) == types.FunctionType:
                     print("Available functions: ", attr)
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == 'get_party_info':
-            print( get_party_info( test_ehrid ) )
-    elif len(sys.argv) == 3:
-        if sys.argv[1] == 'get_party_info':
-            print( get_party_info(sys.argv[2]) )
+    elif len(sys.argv) > 1:
+        try:
+            func = getattr(demographic, sys.argv[1])
+        except:
+            print('Error, unknown function: ', sys.argv[1])
         else:
-            print('Unknown function: ', sys.argv[1] )
+            print( getattr(demographic, sys.argv[1])( debug=True, *sys.argv[2:] ) )

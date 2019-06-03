@@ -58,9 +58,10 @@ if __name__ == '__main__':
             if not attr.startswith('_'):
                 if type(getattr(composition, attr)) == types.FunctionType:
                     print("Available functions: ", attr)
-    try:
-        func = getattr(composition, sys.argv[1])
-    except:
-        print('Error, unknown function: ', sys.argv[1])
-    else:
-        print( getattr(composition, sys.argv[1])(debug=True, *sys.argv[2:] ) )
+    elif len(sys.argv) > 1:
+        try:
+            func = getattr(composition, sys.argv[1])
+        except:
+            print('Error, unknown function: ', sys.argv[1])
+        else:
+            print( getattr(composition, sys.argv[1])(debug=True, *sys.argv[2:] ) )
