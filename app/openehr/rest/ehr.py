@@ -15,14 +15,14 @@ import json
 from openehr.conf import service_url, test_ehrid, test_subject_id, default_namespace
 from openehr.rest.requestor import get_requestor as _get_requestor
 
-def get_ehr_by_subject_id( subject_id=test_subject_id, subject_namespace=default_namespace , debug=True ):
+def get_ehr_by_subject_id( subject_id=test_subject_id, subject_namespace=default_namespace , debug=False ):
     """
     get_ehr_by_subject_id( subject_id, subject_namespace, debug) -> ehr_json object
     """
 
     #http://localhost:8081/rest/v1/ehr?subjectId=3333333333&subjectNamespace=uk.nhs.nhs_number
     url = service_url + 'ehr?subjectId=' + subject_id + '&subjectNamespace=' + subject_namespace
-    if debug: print('Retrieving ' + url)
+    if debug == True: print('Retrieving ' + url)
     requestor = _get_requestor()
 
     try:
@@ -87,15 +87,10 @@ if __name__ == '__main__':
             if not attr.startswith('_'):
                 if type(getattr(ehr, attr)) == types.FunctionType:
                     print("Available functions: ", attr)
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == 'get_ehr_by_id':
-            print( get_ehr_by_id( test_ehrid ) )
-        if sys.argv[1] == 'get_ehr_by_subject_id':
-            print( get_ehr_by_subject_id( test_subject_id, default_namespace, 1 ) )
-    elif len(sys.argv) == 3:
-        if sys.argv[1] == 'get_ehr_by_id':
-            print( get_ehr_by_id(sys.argv[2]) )
-        if sys.argv[1] == 'get_ehr_by_subject_id':
-            print( get_ehr_by_subject_id( sys.argv[2], default_namespace, 1 ) )
+    elif len(sys.argv) > 1:
+        try:
+            func = getattr(ehr, sys.argv[1])
+        except:
+            print('Error, unknown function: ', sys.argv[1])
         else:
-            print('Unknown function: ', sys.argv[1] )
+            print( getattr(ehr, sys.argv[1])( *sys.argv[2:] ) )
