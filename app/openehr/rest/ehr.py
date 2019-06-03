@@ -19,9 +19,14 @@ def get_ehr_by_subject_id( subject_id=test_subject_id, subject_namespace=default
     """
     get_ehr_by_subject_id( subject_id, subject_namespace, debug) -> ehr_json object
     """
+    data = {
+        'subjectId' : subject_id,
+        'subjectNamespace' : subject_namespace,
+    }
+    url_values = urllib.parse.urlencode( data )
 
-    #http://localhost:8081/rest/v1/ehr?subjectId=3333333333&subjectNamespace=uk.nhs.nhs_number
-    url = service_url + 'ehr?subjectId=' + subject_id + '&subjectNamespace=' + subject_namespace
+    url = service_url + 'ehr?' + url_values
+
     if debug == True: print('Retrieving ' + url)
     requestor = _get_requestor()
 
@@ -93,4 +98,4 @@ if __name__ == '__main__':
         except:
             print('Error, unknown function: ', sys.argv[1])
         else:
-            print( getattr(ehr, sys.argv[1])( *sys.argv[2:] ) )
+            print( getattr(ehr, sys.argv[1])( debug=True, *sys.argv[2:] ) )

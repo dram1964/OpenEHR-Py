@@ -63,4 +63,4 @@ if __name__ == '__main__':
     except:
         print('Error, unknown function: ', sys.argv[1])
     else:
-        print( getattr(composition, sys.argv[1])(*sys.argv[2:] ) )
+        print( getattr(composition, sys.argv[1])(debug=True, *sys.argv[2:] ) )
