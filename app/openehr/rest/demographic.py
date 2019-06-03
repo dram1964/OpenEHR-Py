@@ -17,12 +17,9 @@ from openehr.rest.requestor import get_requestor as _get_requestor
 
 def get_party_info( ehrid, debug=False ):
     """
-    get_party_info( ehrid, debug=False )  -> ehr_json object
-
-    Sends an erhid to the ehr/{ehrid} endpoint and returns 
-    the response as a JSON object representing the EHR identified 
-    by the supplied ehrid. Optional debug argument forces 
-    more output if True
+    Sends a REST query to the demographics/ehr/{ehrid}/party endpoint 
+    and returns the response as a JSON object representing the 
+    party info for the specified ehrid
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     if debug: print('Retrieving ', url)
@@ -53,8 +50,6 @@ def get_party_info( ehrid, debug=False ):
 
         try:
             js = json.loads(data)
-            js['error'] = 0
-            return js
         except:
             return { 
                 'error' : 2,
@@ -63,6 +58,9 @@ def get_party_info( ehrid, debug=False ):
                 'meta' : None,
                 'action' : None,
             }
+        else:
+            js['error'] = 0
+            return js
 
 if __name__ == '__main__':
     import sys
