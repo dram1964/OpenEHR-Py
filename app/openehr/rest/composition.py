@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-File: composition.py 
+File: composition.py
 
-Package module for interacting with the OpenEHR Composition API
+Package module for interacting with the Composition endpoint
+of the OpenEHR REST API
 
 Package can be run from the command line:
 python openehr/rest/composition.py [functionname] [param[0],...,param[n]]
-With no arguments runs the xxxx function for the test_ehrid
-value defined in the system configuration file (openehr/conf.py).
 """
 
 import urllib.parse, urllib.error
@@ -17,8 +16,18 @@ from openehr.rest.requestor import run_rest_query
 
 def get_composition_by_uid( composition_id=test_uid, response_format='FLAT', include_meta='true', debug=1):
     """
-    Sends a REST query to composition/{uid}, and returns the JSON response in the requested
-    response_format.
+    Queries the composition/{uid} endpoint to retrieve composition
+    data for the given composition uid, in the specified response format.
+    Query method is GET and composition uid should be specified as a
+    string value. Response format should be one of [FLAT|STRUCTURED|RAW]
+    If the query is successful, response['meta']['href'] will
+    contain a link to the compostion on the OpenEHR server and
+    response['meta']['precedingHref'] will contain a link to the
+    preceding version of the composition. The composition uid will
+    be held in response['compositionUid'] and the composition itself
+    will be in response['composition']. Additional keys for the response
+    object include: 'format', 'templateId', 'deleted', 'lastVersion',
+    'ehrId' and 'lifecycleState'.
     """
     data = {
         'format' : response_format,
