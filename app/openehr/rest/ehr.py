@@ -13,9 +13,9 @@ value defined in the system configuration file (openehr/conf.py).
 import urllib.parse, urllib.error
 import json
 from openehr.conf import service_url, test_ehrid, test_subject_id, default_namespace
-from openehr.rest.requestor import get_requestor as _get_requestor
+from openehr.rest.requestor import run_rest_query
 
-def get_ehr_by_subject_id( subject_id=test_subject_id, subject_namespace=default_namespace , debug=False ):
+def get_ehr_by_subject_id( subject_id, subject_namespace=default_namespace , debug=False ):
     """
     get_ehr_by_subject_id( subject_id, subject_namespace, debug) -> ehr_json object
     """
@@ -27,25 +27,10 @@ def get_ehr_by_subject_id( subject_id=test_subject_id, subject_namespace=default
 
     url = service_url + 'ehr?' + url_values
 
-    if debug == True: print('Retrieving ' + url)
-    requestor = _get_requestor()
+    if debug: print('Retrieving ' + url)
 
-    try:
-        response = requestor.urlopen( url )
-    except urllib.error.HTTPError as e:
-        print( 'HTTP Error: ', e.code )
-        print( 'Reason: ', e.reason )
-        print( 'Headers: ', e.headers )
-    else:
-        data = response.read().decode()
-        if debug: print( 'Response Code: %s' % response.getcode() )
-        if debug: print( 'Retrieved %s characters' % len(data) )
-
-        try:
-            ehr = json.loads(data)
-            return ehr
-        except:
-            return None
+    response = run_rest_query(url)
+    return response
 
 
 def get_ehr_by_id( ehrid , debug=False ):
@@ -59,28 +44,10 @@ def get_ehr_by_id( ehrid , debug=False ):
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
-    requestor = _get_requestor()
 
-    try:
-        response = requestor.urlopen( url )
-    except urllib.error.HTTPError as e:
-        print( 'HTTP Error: ', e.code )
-        print( 'Reason: ', e.reason )
-        print( 'Headers: ', e.headers )
-        return None
-    except urllib.error.URLError as e:
-        print ( 'URL Error: ', e.reason )
-        return None
-    else:
-        data = response.read().decode()
-        if debug: print( 'Response Code: %s' % response.getcode() )
-        if debug: print( 'Retrieved %s characters' % len(data) )
+    response = run_rest_query(url)
+    return response
 
-        try:
-            ehr = json.loads(data)
-            return ehr
-        except:
-            return None
 
 if __name__ == '__main__':
     import sys

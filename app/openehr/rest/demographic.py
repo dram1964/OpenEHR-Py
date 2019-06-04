@@ -20,10 +20,8 @@ def add_party_info( party_data, debug=True):
     url = service_url + 'demographics/party'
     headers = {'Content-Type' : 'application/json;charset=UTF-8'}
 
-    response = run_rest_query(method, url, party_data, headers)
+    response = run_rest_query(url, method, party_data, headers)
     return response
-
-
 
 
 def update_party_info( party_data, debug=True ):
@@ -31,10 +29,8 @@ def update_party_info( party_data, debug=True ):
     url = service_url + 'demographic/party'
     url = service_url + 'demographics/party'
     headers = {'Content-Type' : 'application/json'}
-    #party_data = urllib.parse.urlencode(party_data)
-    #party_data = party_data.encode('ascii')
 
-    response = run_rest_query(method, url, party_data, headers)
+    response = run_rest_query(url, method, party_data, headers)
     return response
 
 
@@ -44,11 +40,10 @@ def get_party_info( ehrid, debug=False ):
     and returns the response as a JSON object representing the 
     party info for the specified ehrid
     """
-    method = 'GET'
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     if debug: print('Retrieving ', url)
 
-    response = run_rest_query(method, url, None, None)
+    response = run_rest_query(url)
     return response
 
 if __name__ == '__main__':

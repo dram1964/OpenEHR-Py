@@ -12,7 +12,7 @@ import urllib.request
 import json
 from openehr.conf import service_url, user_name, password
 
-def run_rest_query(method, url, data, headers):
+def run_rest_query(url, method='GET', data=False, headers=False):
     requestor = get_requestor()
     req = requestor.Request
     req.method = method
@@ -38,9 +38,12 @@ def run_rest_query(method, url, data, headers):
         response = { "error" : e.code, 'error_msg' : 'URL Error: ' + e.reason}
     else:
         response = response.read().decode()
-        response = json.loads(response)
-        response['error'] = False
-        response['error_msg'] = False
+        if response:
+            response = json.loads(response)
+            response['error'] = False
+            response['error_msg'] = False
+        else:
+            response = {'error' : 1, 'error_msg' : 'Response error: no data returned'}
 
     return response
 
