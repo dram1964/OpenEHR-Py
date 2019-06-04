@@ -15,4 +15,8 @@ party_data = {
 
 response = add_party_info(party_data)
 
-print(response)
+if response['error']:
+    print( response['error_msg'] )
+else:
+    print('Action is', response['action'] )
+    print('New Party info at', response['meta']['href'])

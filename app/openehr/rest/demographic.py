@@ -15,164 +15,74 @@ import json
 from openehr.conf import service_url, test_ehrid
 from openehr.rest.requestor import get_requestor as _get_requestor
 
-def add_party_info( party_data, debug=True):
+def run_rest_query(method, url, data, headers):
     requestor = _get_requestor()
-
     req = requestor.Request
+    req.method = method
+
+    if data:
+        data = json.dumps(data)
+        data = data.encode('ascii')
+        if headers:
+            req = req(url, data, headers)
+        else:
+            req = req(url, data)
+    else:
+        req = req(url)
+
+    try:
+        response = requestor.urlopen( req )
+    except urllib.error.HTTPError as e:
+        response = { "error" : e.code, 'error_msg' : 'HTTP Error: ' + e.reason}
+        response_body = e.read().decode()
+        if response_body:
+            response.update( json.loads(response_body) )
+    except urllib.error.URLError as e:
+        response = { "error" : e.code, 'error_msg' : 'URL Error: ' + e.reason}
+    else:
+        response = response.read().decode()
+        response = json.loads(response)
+        response['error'] = False
+        response['error_msg'] = False
+
+    return response
+
+
+def add_party_info( party_data, debug=True):
+    method = 'POST'
     url = service_url + 'demographics/party'
-    data = json.dumps(party_data)
-    data = data.encode('ascii')
     headers = {'Content-Type' : 'application/json;charset=UTF-8'}
 
-    req = req(url, data, headers)
+    response = run_rest_query(method, url, party_data, headers)
+    return response
 
-    try:
-        response = requestor.urlopen( req )
-    except urllib.error.HTTPError as e:
-        response = e.read().decode()
-        return {
-            'error' : e.code,
-            'error_msg' : 'HTTP Error: ' + e.reason,
-            'response' : response,
-            'party' : None,
-            'meta' : None,
-            'action' : None,
-        }
-    except urllib.error.URLError as e:
-        return {
-            'error' : 1,
-            'error_msg' : 'URL Error: ' + e.reason,
-            'party' : None,
-            'meta' : None,
-            'action' : None,
-        }
-    else:
-        data = response.read().decode()
-        if debug: print( 'Response Code: %s' % response.getcode() )
-        if debug: print( 'Retrieved %s characters' % len(data) )
 
-        try:
-            js = json.loads(data)
-        except:
-            return { 
-                'error' : 2,
-                'error_msg' : 'Error converting response to JSON',
-                'response' : data,
-                'party' : None,
-                'meta' : None,
-                'action' : None,
-            }
-        else:
-            return {
-                'error' : 0,
-                'party' : js['meta']['href'],
-                'meta' : js['meta'],
-                'action' : js['action'],
-            }
 
-def update_party_info( ehrid, party_data, debug=True ):
-    """
-    Sends a REST query to the demographics/party end point
-    to update exising party info
-    """
+
+def update_party_info( party_data, debug=True ):
+    method = 'PUT'
+    url = service_url + 'demographic/party'
     url = service_url + 'demographics/party'
-    party = {"id": "772", "version": 50, "firstNames": "Test Tester", "lastNames": "Test-Patient", "gender": "MALE", "dateOfBirth": "1950-01-01", "address": {"id": "772", "version": 50, "address": "21 Winding Road, London, NW1 2PG"}, "partyAdditionalInfo": [{"id": "2924", "version": 0, "key": "ehrId", "value": "33b11502-9e5c-41f0-9cea-93b851c85b67"}, {"id": "2923", "version": 0, "key": "uk.nhs.nhs_number", "value": "3333333333"}]}
-    data = urllib.parse.urlencode(party)
-    data = data.encode('ascii')
-
     headers = {'Content-Type' : 'application/json'}
-    requestor = _get_requestor()
-    req = requestor.Request
-    req.method = 'PUT'
-    req = req(url, data, headers)
+    #party_data = urllib.parse.urlencode(party_data)
+    #party_data = party_data.encode('ascii')
 
-    try:
-        response = requestor.urlopen( req )
-    except urllib.error.HTTPError as e:
-        response = e.read().decode()
-        return {
-            'error' : e.code,
-            'error_msg' : 'HTTP Error: ' + e.reason,
-            'response' : response,
-            'party' : None,
-            'meta' : None,
-            'action' : None,
-        }
-    except urllib.error.URLError as e:
-        return {
-            'error' : 1,
-            'error_msg' : 'URL Error: ' + e.reason,
-            'party' : req,
-            'meta' : None,
-            'action' : None,
-        }
-    else:
-        data = response.read().decode()
-        if debug: print( 'Response Code: %s' % response.getcode() )
-        if debug: print( 'Retrieved %s characters' % len(data) )
-
-        try:
-            js = json.loads(data)
-        except:
-            return { 
-                'error' : 2,
-                'error_msg' : 'Error converting response to JSON',
-                'response' : data,
-                'party' : None,
-                'meta' : None,
-                'action' : None,
-            }
-        else:
-            js['error'] = 0
-            return js
+    response = run_rest_query(method, url, party_data, headers)
+    return response
 
 
-def get_party_info( ehrid, debug=False ):
+def get_party_info( ehrid=test_ehrid, debug=False ):
     """
     Sends a REST query to the demographics/ehr/{ehrid}/party endpoint 
     and returns the response as a JSON object representing the 
     party info for the specified ehrid
     """
+    method = 'GET'
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     if debug: print('Retrieving ', url)
-    requestor = _get_requestor()
 
-    try:
-        response = requestor.urlopen( url )
-    except urllib.error.HTTPError as e:
-        return {
-            'error' : e.code,
-            'error_msg' : 'HTTP Error: ' + e.reason,
-            'party' : None,
-            'meta' : None,
-            'action' : None,
-        }
-    except urllib.error.URLError as e:
-        return {
-            'error' : 1,
-            'error_msg' : 'URL Error: ' + e.reason,
-            'party' : None,
-            'meta' : None,
-            'action' : None,
-        }
-    else:
-        data = response.read().decode()
-        if debug: print( 'Response Code: %s' % response.getcode() )
-        if debug: print( 'Retrieved %s characters' % len(data) )
-
-        try:
-            js = json.loads(data)
-        except:
-            return { 
-                'error' : 2,
-                'error_msg' : 'Error converting response to JSON',
-                'party' : None,
-                'meta' : None,
-                'action' : None,
-            }
-        else:
-            js['error'] = 0
-            return js
+    response = run_rest_query(method, url, None, None)
+    return response
 
 if __name__ == '__main__':
     import sys
