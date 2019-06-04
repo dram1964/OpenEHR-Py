@@ -11,41 +11,8 @@ value defined in the system configuration file (openehr/conf.py).
 """
 
 import urllib.parse, urllib.error
-import json
 from openehr.conf import service_url, test_ehrid
-from openehr.rest.requestor import get_requestor as _get_requestor
-
-def run_rest_query(method, url, data, headers):
-    requestor = _get_requestor()
-    req = requestor.Request
-    req.method = method
-
-    if data:
-        data = json.dumps(data)
-        data = data.encode('ascii')
-        if headers:
-            req = req(url, data, headers)
-        else:
-            req = req(url, data)
-    else:
-        req = req(url)
-
-    try:
-        response = requestor.urlopen( req )
-    except urllib.error.HTTPError as e:
-        response = { "error" : e.code, 'error_msg' : 'HTTP Error: ' + e.reason}
-        response_body = e.read().decode()
-        if response_body:
-            response.update( json.loads(response_body) )
-    except urllib.error.URLError as e:
-        response = { "error" : e.code, 'error_msg' : 'URL Error: ' + e.reason}
-    else:
-        response = response.read().decode()
-        response = json.loads(response)
-        response['error'] = False
-        response['error_msg'] = False
-
-    return response
+from openehr.rest.requestor import run_rest_query
 
 
 def add_party_info( party_data, debug=True):
@@ -71,7 +38,7 @@ def update_party_info( party_data, debug=True ):
     return response
 
 
-def get_party_info( ehrid=test_ehrid, debug=False ):
+def get_party_info( ehrid, debug=False ):
     """
     Sends a REST query to the demographics/ehr/{ehrid}/party endpoint 
     and returns the response as a JSON object representing the 
