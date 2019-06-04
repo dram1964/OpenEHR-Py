@@ -2,12 +2,11 @@
 """
 File: demographic.py 
 
-Package module for interacting with the OpenEHR Demographic API
+Package module for interacting with the Demographic endpoint of the
+OpenEHR REST API
 
 Package can be run from the command line:
 python openehr/rest/demographic.py functionname [param[0],...,param[n]]
-With no arguments runs the get_party_info function for the test_ehrid
-value defined in the system configuration file (openehr/conf.py).
 """
 
 import urllib.parse, urllib.error
@@ -16,6 +15,16 @@ from openehr.rest.requestor import run_rest_query
 
 
 def add_party_info( party_data, debug=True):
+    """
+    Queries the demographics/party REST API endpoint
+    on the OpenEHR server to add new party information.
+    Query method is POST and party data should be provided
+    as a dictionary object
+    Returns a dictionary response object. If the query is 
+    successful, response['meta']['href'] will contain
+    a link to the party information on the OpenEHR server 
+    and response['action'] will be set to 'CREATE'
+    """
     method = 'POST'
     url = service_url + 'demographics/party'
     headers = {'Content-Type' : 'application/json;charset=UTF-8'}
@@ -25,6 +34,17 @@ def add_party_info( party_data, debug=True):
 
 
 def update_party_info( party_data, debug=True ):
+    """
+    Queries the demographics/party REST API endpoint
+    on the OpenEHR server to update existing party 
+    information.
+    Query method is PUT and party data should be provided
+    as a dictionary object
+    Returns a dictionary response object. If the query is 
+    successful, response['meta']['href'] will contain
+    a link to the party information on the OpenEHR server 
+    and response['action'] will be set to 'UPDATE'
+    """
     method = 'PUT'
     url = service_url + 'demographic/party'
     url = service_url + 'demographics/party'
@@ -36,9 +56,15 @@ def update_party_info( party_data, debug=True ):
 
 def get_party_info( ehrid, debug=False ):
     """
-    Sends a REST query to the demographics/ehr/{ehrid}/party endpoint 
-    and returns the response as a JSON object representing the 
-    party info for the specified ehrid
+    Queries the demographics/ehr/{ehrid}/party endpoint 
+    to retrieve party information for the specified ehrid.
+    Query method is GET and erhid should be specified as
+    a string value. 
+    If the query is successful, response['meta']['href'] will 
+    contain a link to the party information on the OpenEHR server 
+    and response['action'] will be set to 'RETRIEVE'. 
+    response['party'] will contain the party information in 
+    a dictionary object
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     if debug: print('Retrieving ', url)
