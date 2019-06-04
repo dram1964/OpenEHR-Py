@@ -53,13 +53,40 @@ def get_ehr_by_id( ehrid , debug=False ):
     a link to the ehr on the OpenEHR server
     and response['action'] will be set to 'RETRIEVE'.
     response['ehrId'] will contain the ehr_id for the subject
-    and response['ehrStatus'] will contain the remainder of 
+    and response['ehrStatus'] will contain the remainder of
     the ehr record
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
 
     response = run_rest_query(url)
+    return response
+
+def create_new_ehr( subject_id, subject_namespace=default_namespace, committer_name='OpenEHR-Py', committer_id=1, debug=True):
+    """
+    Queries the ehr endpoint on the OpenEHR server to
+    create a new ehr record.
+    Query method is POST and subject_id should be provided as a
+    string object.
+    Returns a dictionary response object. If the query is
+    successful, response['meta']['href'] will contain
+    a link to the ehr on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['ehrId'] will contain the ehr_id for the subject
+    """
+
+    method = 'POST'
+    data = {
+        'subjectId' : subject_id,
+        'subjectNamespace' : subject_namespace,
+    }
+    url_values = urllib.parse.urlencode( data )
+
+    url = service_url + 'ehr?' + url_values
+
+    if debug: print('Retrieving ' + url)
+
+    response = run_rest_query(url, method)
     return response
 
 
