@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-File: ehr.py 
+File: ehr.py
 
-Package module for interacting with the OpenEHR EHR API
+Package module for interacting with the EHR endpoint of the
+OpenEHR REST API
 
 Package can be run from the command line:
 python openehr/rest/ehr.py functionname [param[0],...,param[n]]
-With no arguments runs the get_ehr_by_id function for the test_ehrid
-value defined in the system configuration file (openehr/conf.py).
 """
 
 import urllib.parse, urllib.error
@@ -17,7 +16,17 @@ from openehr.rest.requestor import run_rest_query
 
 def get_ehr_by_subject_id( subject_id, subject_namespace=default_namespace , debug=False ):
     """
-    get_ehr_by_subject_id( subject_id, subject_namespace, debug) -> ehr_json object
+    Queries the ehr REST API endpoint on the OpenEHR server
+    for a given subject id in the given subject namespace.
+    Query method is GET. Subject id and subject namespace
+    should be provided as string objects
+    Returns a dictionary response object. If the query is
+    successful, response['meta']['href'] will contain
+    a link to the ehr on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['ehrId'] will contain the ehr_id for the subject
+    and response['ehrStatus'] will contain the remainder of 
+    the ehr record
     """
     data = {
         'subjectId' : subject_id,
@@ -35,12 +44,17 @@ def get_ehr_by_subject_id( subject_id, subject_namespace=default_namespace , deb
 
 def get_ehr_by_id( ehrid , debug=False ):
     """
-    get_ehr_by_id( ehrid, debug=False )  -> ehr_json object
-
-    Sends an erhid to the ehr/{ehrid} endpoint and returns 
-    the response as a JSON object representing the EHR identified 
-    by the supplied ehrid. Optional debug argument forces 
-    more output if True
+    Queries the ehr/{ehrid} endpoint on the OpenEHR server
+    for a given ehrid.
+    Query method is GET and ehrid should be provided as a
+    string object.
+    Returns a dictionary response object. If the query is
+    successful, response['meta']['href'] will contain
+    a link to the ehr on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['ehrId'] will contain the ehr_id for the subject
+    and response['ehrStatus'] will contain the remainder of 
+    the ehr record
     """
     url = service_url + 'ehr/' + ehrid
     if debug: print('Retrieving ', url)
