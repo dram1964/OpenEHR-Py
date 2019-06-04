@@ -12,7 +12,7 @@ import urllib.request
 import json
 from openehr.conf import service_url, user_name, password
 
-def run_rest_query(url, method='GET', data=False, headers=False):
+def run_rest_query(url, method='GET', data=None, headers=False):
     requestor = get_requestor()
     req = requestor.Request
     req.method = method
@@ -24,6 +24,8 @@ def run_rest_query(url, method='GET', data=False, headers=False):
             req = req(url, data, headers)
         else:
             req = req(url, data)
+    elif headers:
+            req = req(url, None, headers)
     else:
         req = req(url)
 

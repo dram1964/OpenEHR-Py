@@ -56,20 +56,46 @@ def update_party_info( party_data, debug=True ):
 
 def get_party_info( ehrid, debug=False ):
     """
-    Queries the demographics/ehr/{ehrid}/party endpoint 
+    Queries the demographics/ehr/{ehrid}/party endpoint
     to retrieve party information for the specified ehrid.
     Query method is GET and erhid should be specified as
-    a string value. 
-    If the query is successful, response['meta']['href'] will 
-    contain a link to the party information on the OpenEHR server 
-    and response['action'] will be set to 'RETRIEVE'. 
-    response['party'] will contain the party information in 
+    a string value.
+    If the query is successful, response['meta']['href'] will
+    contain a link to the party information on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['party'] will contain the party information in
     a dictionary object
     """
     url = service_url + 'demographics/ehr/' + ehrid + '/party'
     if debug: print('Retrieving ', url)
 
     response = run_rest_query(url)
+    return response
+
+def party_query( data, debug=True ):
+    """
+    Queries the demographics/party/query endpoint
+    to retrieve party information based on the data
+    specified with two keys: 'maxHits' which should
+    have an integer value specifying the maximum 
+    number of party records to return and; 'parameters'
+    which should be a string specified as
+    'key1=value1&key2=value2...keyn=valuen'
+    Query method is GET
+    If the query is successful, response['meta']['href'] will
+    contain a link to the query results on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['parties'] will contain an array of dictionary
+    party objects returned from the query
+    """
+    method = 'GET'
+    url_values = urllib.parse.urlencode( data )
+    headers = {'Content-Type' : 'application/json'}
+
+    url = service_url + 'demographics/party/query/?' + url_values
+    if debug: print('Retrieving ', url)
+
+    response = run_rest_query(url, method, False, headers)
     return response
 
 if __name__ == '__main__':
