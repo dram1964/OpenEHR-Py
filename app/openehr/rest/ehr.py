@@ -89,6 +89,29 @@ def create_new_ehr( subject_id, subject_namespace=default_namespace, committer_n
     response = run_rest_query(url, method)
     return response
 
+def update_ehr_status( ehrid, ehr_status, debug=True):
+    """
+    Queries the ehr/{ehrId}/status endpoint on the OpenEHR
+    server to update the ehr status for the given ehrid.
+    Query method is PUT. ehrid should be provided as a
+    string object and ehr_status as a dictionary object
+    with the following keys: 'subjectId', 'subjectNamespace',
+    'queryable', 'modifiable'.
+    Returns a dictionary response object. If the query is
+    successful, response['meta']['href'] will contain
+    a link to the ehr on the OpenEHR server
+    and response['action'] will be set to 'UPDATE'.
+    """
+    method = 'PUT'
+    url = service_url + 'ehr/' + ehrid + '/status'
+    headers = {'Content-Type' : 'application/json;charset=UTF-8'}
+
+    if debug: print('Retrieving ' + url)
+
+    response = run_rest_query(url, method, ehr_status, headers)
+    return response
+
+
 
 if __name__ == '__main__':
     import sys
