@@ -72,7 +72,7 @@ def get_party_info( ehrid, debug=False ):
     response = run_rest_query(url)
     return response
 
-def party_query( data, debug=True ):
+def party_get_query( data, debug=True ):
     """
     Queries the demographics/party/query endpoint
     to retrieve party information based on the data
@@ -96,6 +96,36 @@ def party_query( data, debug=True ):
     if debug: print('Retrieving ', url)
 
     response = run_rest_query(url, method, False, headers)
+    return response
+
+def party_post_query( data, limit=10, debug=True ):
+    """
+    Queries the demographics/party/query endpoint
+    to retrieve party information based on the filters
+    provided. Query method is POST and the query is provided
+    in the first parameter as an array of dictionary items
+    containing two keys: 'key' and 'value'.
+    For example: [ {"key" : "lastNames",
+    "value" : "Wilson" },...]. 'limit' is specified as an
+    integer value to limit the number of results returned:
+    set this value to '0' if no limit is required.
+    If the query is successful, response['meta']['href'] will
+    contain a link to the query results on the OpenEHR server
+    and response['action'] will be set to 'RETRIEVE'.
+    response['parties'] will contain an array of dictionary
+    party objects returned from the query
+    """
+    method = 'POST'
+    headers = {'Content-Type' : 'application/json'}
+    url = service_url + 'demographics/party/query'
+
+    if limit:
+        limit = { "maxHits" : limit }
+        url_values = urllib.parse.urlencode( limit )
+        url = url + '?' + url_values
+    if debug: print('Retrieving ', url)
+
+    response = run_rest_query(url, method, data, headers)
     return response
 
 if __name__ == '__main__':
