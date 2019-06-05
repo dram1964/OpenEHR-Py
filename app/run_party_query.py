@@ -13,14 +13,18 @@ from openehr.rest.demographic import party_get_query, party_post_query
 
 query = [
     { "key" : "gender", "value" : "MALE" }, 
-    { "key" : "firstNames", "value" : "Test" }
 ] 
 response = party_post_query(query, 10)
 print(response)
 
 query = [
-    { "key" : "gender", "value" : "FEMALE" }, 
+    { "key" : "gender", "value" : "MALE" }, 
 ] 
 response = party_post_query(query, 0)
 for party in response['parties']:
     print(party['id'], party['lastNames'])
+    if 'partyAdditionalInfo' in party:
+        additional = party['partyAdditionalInfo']
+        for info in additional:
+            if info['key'] == 'ehrId':
+                print("Ehrid: ", info['value'])

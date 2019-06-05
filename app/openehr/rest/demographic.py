@@ -128,6 +128,22 @@ def party_post_query( data, limit=10, debug=True ):
     response = run_rest_query(url, method, data, headers)
     return response
 
+def delete_demographic_party( party_id, debug=True ):
+    """
+    Queries the demographics/party/{partyId} endpoint
+    to delete the specified demographic party record.
+    Query method is DELETE and party id should be specified
+    as an integer value
+    If the query is successful, response['action'] will
+    be set to 'RETRIEVE'.
+    """
+    method = 'DELETE'
+    url = service_url + 'demographics/party/' + party_id
+    if debug: print('Retrieving ', url)
+    response = run_rest_query(url, method)
+    return response
+
+
 if __name__ == '__main__':
     import sys
     import types
