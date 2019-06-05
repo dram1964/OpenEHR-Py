@@ -1,0 +1,342 @@
+Retrieving Composition: 76d20594-bd4c-45e8-8ffc-cdb786ca0d68::default::2
+Retrieving http://thinkehr:8081/rest/v1/composition/76d20594-bd4c-45e8-8ffc-cdb786ca0d68::default::2?format=RAW&meta=true
+{
+    "@class": "COMPOSITION",
+    "archetype_details": {
+        "@class": "ARCHETYPED",
+        "archetype_id": {
+            "@class": "ARCHETYPE_ID",
+            "value": "openEHR-EHR-COMPOSITION.report.v1"
+        },
+        "rm_version": "1.0.2",
+        "template_id": {
+            "@class": "TEMPLATE_ID",
+            "value": "GEL - Data request Summary.v1"
+        }
+    },
+    "archetype_node_id": "openEHR-EHR-COMPOSITION.report.v1",
+    "category": {
+        "@class": "DV_CODED_TEXT",
+        "defining_code": {
+            "@class": "CODE_PHRASE",
+            "code_string": "433",
+            "terminology_id": {
+                "@class": "TERMINOLOGY_ID",
+                "value": "openehr"
+            }
+        },
+        "value": "event"
+    },
+    "composer": {
+        "@class": "PARTY_IDENTIFIED",
+        "name": "OpenEHR-Perl-STRUCTURED"
+    },
+    "content": [
+        {
+            "@class": "INSTRUCTION",
+            "activities": [
+                {
+                    "@class": "ACTIVITY",
+                    "action_archetype_id": "/.*/",
+                    "archetype_node_id": "at0001",
+                    "description": {
+                        "@class": "ITEM_TREE",
+                        "archetype_node_id": "at0009",
+                        "items": [
+                            {
+                                "@class": "ELEMENT",
+                                "archetype_node_id": "at0121",
+                                "name": {
+                                    "@class": "DV_TEXT",
+                                    "value": "Service name"
+                                },
+                                "value": {
+                                    "@class": "DV_TEXT",
+                                    "value": "GEL Information data request"
+                                }
+                            },
+                            {
+                                "@class": "ELEMENT",
+                                "archetype_node_id": "at0148",
+                                "name": {
+                                    "@class": "DV_TEXT",
+                                    "value": "Service type"
+                                },
+                                "value": {
+                                    "@class": "DV_TEXT",
+                                    "value": "pathology"
+                                }
+                            },
+                            {
+                                "@class": "CLUSTER",
+                                "archetype_details": {
+                                    "@class": "ARCHETYPED",
+                                    "archetype_id": {
+                                        "@class": "ARCHETYPE_ID",
+                                        "value": "openEHR-EHR-CLUSTER.information_request_details_gel.v0"
+                                    },
+                                    "rm_version": "1.0.2"
+                                },
+                                "archetype_node_id": "openEHR-EHR-CLUSTER.information_request_details_gel.v0",
+                                "items": [
+                                    {
+                                        "@class": "ELEMENT",
+                                        "archetype_node_id": "at0001",
+                                        "name": {
+                                            "@class": "DV_TEXT",
+                                            "value": "Patient information request start date"
+                                        },
+                                        "value": {
+                                            "@class": "DV_DATE_TIME",
+                                            "value": "2011-01-01T00:00:00Z"
+                                        }
+                                    },
+                                    {
+                                        "@class": "ELEMENT",
+                                        "archetype_node_id": "at0002",
+                                        "name": {
+                                            "@class": "DV_TEXT",
+                                            "value": "Patient information request end date"
+                                        },
+                                        "value": {
+                                            "@class": "DV_DATE_TIME",
+                                            "value": "2018-01-01T00:00:00Z"
+                                        }
+                                    }
+                                ],
+                                "name": {
+                                    "@class": "DV_TEXT",
+                                    "value": "GEL information request details"
+                                }
+                            }
+                        ],
+                        "name": {
+                            "@class": "DV_TEXT",
+                            "value": "Tree"
+                        }
+                    },
+                    "name": {
+                        "@class": "DV_TEXT",
+                        "value": "Request"
+                    },
+                    "timing": {
+                        "@class": "DV_PARSABLE",
+                        "formalism": "timing",
+                        "value": "2018-07-01T00:00:00"
+                    }
+                }
+            ],
+            "archetype_details": {
+                "@class": "ARCHETYPED",
+                "archetype_id": {
+                    "@class": "ARCHETYPE_ID",
+                    "value": "openEHR-EHR-INSTRUCTION.request.v0"
+                },
+                "rm_version": "1.0.2"
+            },
+            "archetype_node_id": "openEHR-EHR-INSTRUCTION.request.v0",
+            "encoding": {
+                "@class": "CODE_PHRASE",
+                "code_string": "UTF-8",
+                "terminology_id": {
+                    "@class": "TERMINOLOGY_ID",
+                    "value": "IANA_character-sets"
+                }
+            },
+            "expiry_time": {
+                "@class": "DV_DATE_TIME",
+                "value": "2018-12-31T00:00:00Z"
+            },
+            "language": {
+                "@class": "CODE_PHRASE",
+                "code_string": "en",
+                "terminology_id": {
+                    "@class": "TERMINOLOGY_ID",
+                    "value": "ISO_639-1"
+                }
+            },
+            "name": {
+                "@class": "DV_TEXT",
+                "value": "Service request"
+            },
+            "narrative": {
+                "@class": "DV_TEXT",
+                "value": "GEL pathology data request"
+            },
+            "protocol": {
+                "@class": "ITEM_TREE",
+                "archetype_node_id": "at0008",
+                "items": [
+                    {
+                        "@class": "ELEMENT",
+                        "archetype_node_id": "at0010",
+                        "name": {
+                            "@class": "DV_TEXT",
+                            "value": "Requestor Identifier"
+                        },
+                        "value": {
+                            "@class": "DV_TEXT",
+                            "value": "834y5jkdk-ssxhs"
+                        }
+                    }
+                ],
+                "name": {
+                    "@class": "DV_TEXT",
+                    "value": "Tree"
+                }
+            },
+            "subject": {
+                "@class": "PARTY_SELF"
+            },
+            "uid": {
+                "@class": "HIER_OBJECT_ID",
+                "value": "3695726c-53df-4a97-a4ab-6fe65ef25334"
+            }
+        },
+        {
+            "@class": "ACTION",
+            "archetype_details": {
+                "@class": "ARCHETYPED",
+                "archetype_id": {
+                    "@class": "ARCHETYPE_ID",
+                    "value": "openEHR-EHR-ACTION.service.v0"
+                },
+                "rm_version": "1.0.2"
+            },
+            "archetype_node_id": "openEHR-EHR-ACTION.service.v0",
+            "description": {
+                "@class": "ITEM_TREE",
+                "archetype_node_id": "at0001",
+                "items": [
+                    {
+                        "@class": "ELEMENT",
+                        "archetype_node_id": "at0011",
+                        "name": {
+                            "@class": "DV_TEXT",
+                            "value": "Service name"
+                        },
+                        "value": {
+                            "@class": "DV_TEXT",
+                            "value": "GEL Information data request"
+                        }
+                    },
+                    {
+                        "@class": "ELEMENT",
+                        "archetype_node_id": "at0014",
+                        "name": {
+                            "@class": "DV_TEXT",
+                            "value": "Service type"
+                        },
+                        "value": {
+                            "@class": "DV_TEXT",
+                            "value": "pathology"
+                        }
+                    }
+                ],
+                "name": {
+                    "@class": "DV_TEXT",
+                    "value": "Tree"
+                }
+            },
+            "encoding": {
+                "@class": "CODE_PHRASE",
+                "code_string": "UTF-8",
+                "terminology_id": {
+                    "@class": "TERMINOLOGY_ID",
+                    "value": "IANA_character-sets"
+                }
+            },
+            "ism_transition": {
+                "@class": "ISM_TRANSITION",
+                "current_state": {
+                    "@class": "DV_CODED_TEXT",
+                    "defining_code": {
+                        "@class": "CODE_PHRASE",
+                        "code_string": "529",
+                        "terminology_id": {
+                            "@class": "TERMINOLOGY_ID",
+                            "value": "openehr"
+                        }
+                    },
+                    "value": "scheduled"
+                }
+            },
+            "language": {
+                "@class": "CODE_PHRASE",
+                "code_string": "en",
+                "terminology_id": {
+                    "@class": "TERMINOLOGY_ID",
+                    "value": "ISO_639-1"
+                }
+            },
+            "name": {
+                "@class": "DV_TEXT",
+                "value": "Service"
+            },
+            "subject": {
+                "@class": "PARTY_SELF"
+            },
+            "time": {
+                "@class": "DV_DATE_TIME",
+                "value": "2018-07-01T00:00:00Z"
+            }
+        }
+    ],
+    "context": {
+        "@class": "EVENT_CONTEXT",
+        "health_care_facility": {
+            "@class": "PARTY_IDENTIFIED",
+            "external_ref": {
+                "@class": "PARTY_REF",
+                "id": {
+                    "@class": "GENERIC_ID",
+                    "scheme": "GOSH-SCHEME",
+                    "value": "GOSH"
+                },
+                "namespace": "GOSH-NS",
+                "type": "PARTY"
+            },
+            "name": "Great Ormond Street"
+        },
+        "setting": {
+            "@class": "DV_CODED_TEXT",
+            "defining_code": {
+                "@class": "CODE_PHRASE",
+                "code_string": "238",
+                "terminology_id": {
+                    "@class": "TERMINOLOGY_ID",
+                    "value": "openehr"
+                }
+            },
+            "value": "other care"
+        },
+        "start_time": {
+            "@class": "DV_DATE_TIME",
+            "value": "2018-07-01T00:00:00Z"
+        }
+    },
+    "language": {
+        "@class": "CODE_PHRASE",
+        "code_string": "en",
+        "terminology_id": {
+            "@class": "TERMINOLOGY_ID",
+            "value": "ISO_639-1"
+        }
+    },
+    "name": {
+        "@class": "DV_TEXT",
+        "value": "GEL Data request summary"
+    },
+    "territory": {
+        "@class": "CODE_PHRASE",
+        "code_string": "ES",
+        "terminology_id": {
+            "@class": "TERMINOLOGY_ID",
+            "value": "ISO_3166-1"
+        }
+    },
+    "uid": {
+        "@class": "OBJECT_VERSION_ID",
+        "value": "76d20594-bd4c-45e8-8ffc-cdb786ca0d68::default::2"
+    }
+}
