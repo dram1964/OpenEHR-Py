@@ -24,7 +24,7 @@ class InformationOrder:
 
 class composition_category(InformationOrder):
 
-    def composition(self, language_data):
+    def composition(self, category_data):
         if self.composition_format == 'FLAT':
             self.flat_composition = {
                 "gel_data_request_summary/category|code": "433",
@@ -102,10 +102,6 @@ class composition_service_request(InformationOrder):
         data = [{
             'narrative' : 'GEL pathology data request',
             'identifier' : '338899LLXX55TT',
-            'encoding_code' : self.encoding['code'],
-            'encoding_terminology' : self.encoding['terminology'],
-            'language_code' : self.language['code'],
-            'language_terminology' : self.language['terminology'],
             'service_name' : 'GEL Information data request',
             'service_type' : "pathology",
             'expiry_time' : "2018-12-31T00:00:00Z",
@@ -113,9 +109,10 @@ class composition_service_request(InformationOrder):
             'request_end' :  "2018-01-01T00:00:00Z",
             'request_date' : "2018-07-01T00:00:00",
         }]
+        If you wish to change the encoding and language values for the
+        service_request element, these will need to be changed in the 
+        Composition's class
         """
-#        if request_data:
-#            data.update(request_data)
         self.flat_composition = {}
         for request in range(len(request_data)):
             if self.composition_format == 'FLAT':
@@ -126,13 +123,13 @@ class composition_service_request(InformationOrder):
                 }
 
                 service_request_encoding = {
-                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|code': self.encoding['code'], #request_data[request]['encoding_code'],
-                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|terminology': self.encoding['terminology'], #request_data[request]['encoding_terminology'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|code': self.encoding['code'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|terminology': self.encoding['terminology'],
                 }
 
                 service_request_language = {
-                    'gel_data_request_summary/service_request:' + str(request) + '/language|code': self.language['code'], #request_data[request]['language_code'],
-                    'gel_data_request_summary/service_request:' + str(request) + '/language|terminology': self.language['terminology'], #request_data[request]['language_terminology'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/language|code': self.language['code'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/language|terminology': self.language['terminology'],
                 }
 
                 service_request_request = {
@@ -147,7 +144,7 @@ class composition_service_request(InformationOrder):
                 for element in [service_request, service_request_encoding, service_request_language, service_request_request]:
                     self.flat_composition.update(element)
 
-            return self.flat_composition
+        return self.flat_composition
 
 class composition_territory(InformationOrder):
 
@@ -189,9 +186,19 @@ service_request_data = [
         'request_start' : "2010-01-01T00:00:00Z",
         'request_end' :  "2019-01-01T00:00:00Z",
         'request_date' : "2019-07-01T00:00:00",
+    },
+    {
+        'narrative' : 'gel pathology data request',
+        'identifier' : '553322kkyy33pp',
+        'service_name' : 'gel information data request',
+        'service_type' : "pathology",
+        'expiry_time' : "2019-12-31t00:00:00z",
+        'request_start' : "2010-01-01T00:00:00Z",
+        'request_end' :  "2019-01-01T00:00:00Z",
+        'request_date' : "2019-07-01T00:00:00",
     }
 ]
-information_order.add_element( composition_service_request, service_request_data )
+information_order.add_element(composition_service_request, service_request_data )
 information_order.add_element(composition_service, {})
 information_order.add_element(composition_context, {})
 information_order.add_element(composition_language, {})
