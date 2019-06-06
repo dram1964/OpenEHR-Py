@@ -6,6 +6,16 @@ class InformationOrder:
 
     composition = {}
 
+    encoding = { 
+        'code' : 'UTF-8',
+        'terminology' : 'IANA_character-sets',
+    }
+
+    language = {
+        'code' : 'en',
+        'terminology' : 'ISO_639-1',
+    }
+
     def __init__(self, composition_format='FLAT'):
         self.composition_format = composition_format
 
@@ -86,50 +96,77 @@ class composition_service(InformationOrder):
 class composition_service_request(InformationOrder):
 
     def composition(self, request_data):
-        if self.composition_format == 'FLAT':
-            self.flat_composition = {
-                "gel_data_request_summary/service_request:0/expiry_time": "2018-12-31T00:00:00Z",
-                "gel_data_request_summary/service_request:0/narrative": "GEL pathology data request",
-                "gel_data_request_summary/service_request:0/requestor_identifier": "834y5jkdk-ssxhs",
-            }
+        """
+        Service Request data should be supplied as an array 
+        of dictionary items with the following keys:
+        data = [{
+            'narrative' : 'GEL pathology data request',
+            'identifier' : '338899LLXX55TT',
+            'encoding_code' : self.encoding['code'],
+            'encoding_terminology' : self.encoding['terminology'],
+            'language_code' : self.language['code'],
+            'language_terminology' : self.language['terminology'],
+            'service_name' : 'GEL Information data request',
+            'service_type' : "pathology",
+            'expiry_time' : "2018-12-31T00:00:00Z",
+            'request_start' : "2011-01-01T00:00:00Z",
+            'request_end' :  "2018-01-01T00:00:00Z",
+            'request_date' : "2018-07-01T00:00:00",
+        }]
+        """
+#        if request_data:
+#            data.update(request_data)
+        self.flat_composition = {}
+        for request in range(len(request_data)):
+            if self.composition_format == 'FLAT':
+                service_request = {
+                    'gel_data_request_summary/service_request:' + str(request) + '/expiry_time': request_data[request]['expiry_time'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/narrative': request_data[request]['narrative'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/requestor_identifier': request_data[request]['identifier'],
+                }
 
-            service_request_encoding = {
-                "gel_data_request_summary/service_request:0/encoding|code": "UTF-8",
-                "gel_data_request_summary/service_request:0/encoding|terminology": "IANA_character-sets",
-            }
+                service_request_encoding = {
+                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|code': self.encoding['code'], #request_data[request]['encoding_code'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/encoding|terminology': self.encoding['terminology'], #request_data[request]['encoding_terminology'],
+                }
 
-            service_request_language = {
-                "gel_data_request_summary/service_request:0/language|code": "en",
-                "gel_data_request_summary/service_request:0/language|terminology": "ISO_639-1",
-            }
+                service_request_language = {
+                    'gel_data_request_summary/service_request:' + str(request) + '/language|code': self.language['code'], #request_data[request]['language_code'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/language|terminology': self.language['terminology'], #request_data[request]['language_terminology'],
+                }
 
-            service_request_request = {
-                "gel_data_request_summary/service_request:0/request:0/gel_information_request_details:0/patient_information_request_end_date": "2018-01-01T00:00:00Z",
-                "gel_data_request_summary/service_request:0/request:0/gel_information_request_details:0/patient_information_request_start_date": "2011-01-01T00:00:00Z",
-                "gel_data_request_summary/service_request:0/request:0/service_name": "GEL Information data request",
-                "gel_data_request_summary/service_request:0/request:0/service_type": "pathology",
-                "gel_data_request_summary/service_request:0/request:0/timing": "2018-07-01T00:00:00",
-                "gel_data_request_summary/service_request:0/request:0/timing|formalism": "timing",
-            }
+                service_request_request = {
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/gel_information_request_details:0/patient_information_request_end_date': request_data[request]['request_end'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/gel_information_request_details:0/patient_information_request_start_date': request_data[request]['request_start'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/service_name': request_data[request]['service_name'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/service_type': request_data[request]['service_type'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/timing': request_data[request]['request_date'],
+                    'gel_data_request_summary/service_request:' + str(request) + '/request:0/timing|formalism': 'timing',
+                }
 
-            for element in [service_request_encoding, service_request_language, service_request_request]:
-                self.flat_composition.update(element)
+                for element in [service_request, service_request_encoding, service_request_language, service_request_request]:
+                    self.flat_composition.update(element)
 
             return self.flat_composition
 
 class composition_territory(InformationOrder):
 
-    def composition(self, territory_code='EN'):
+    def composition(self, territory_code):
+        if not territory_code:
+            territory_code = 'en'
         if self.composition_format == 'FLAT':
             self.flat_composition = {
                 "gel_data_request_summary/territory|code": territory_code,
-                "gel_data_request_summary/territory|terminology": "ISO_3166-1"
+                "gel_data_request_summary/territory|terminology": "iso_3166-1"
             }
             return self.flat_composition
 
 class composition_composer(InformationOrder):
 
-    def composition(self, composer_name='OpenEHR-Py-FLAT'):
+
+    def composition(self, composer_name):
+        if not composer_name:
+            composer_name = 'openehr-py-' + self.composition_format 
         if self.composition_format == 'FLAT':
             self.flat_composition = {
                 "gel_data_request_summary/composer|name": composer_name,
@@ -139,9 +176,22 @@ class composition_composer(InformationOrder):
 
 
 information_order = InformationOrder('FLAT')
-information_order.add_element(composition_composer, 'David Ramlakhan')
-information_order.add_element(composition_territory, 'EF')
-information_order.add_element(composition_service_request, {})
+information_order.add_element(composition_composer, None)
+information_order.add_element(composition_territory, None)
+
+service_request_data = [
+    {
+        'narrative' : 'gel cancer data request',
+        'identifier' : '553322kkyy33pp',
+        'service_name' : 'gel information data request',
+        'service_type' : "cancer",
+        'expiry_time' : "2019-12-31t00:00:00z",
+        'request_start' : "2010-01-01T00:00:00Z",
+        'request_end' :  "2019-01-01T00:00:00Z",
+        'request_date' : "2019-07-01T00:00:00",
+    }
+]
+information_order.add_element( composition_service_request, service_request_data )
 information_order.add_element(composition_service, {})
 information_order.add_element(composition_context, {})
 information_order.add_element(composition_language, {})
