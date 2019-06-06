@@ -6,7 +6,7 @@ class InformationOrder:
 
     composition = {}
 
-    encoding = { 
+    encoding = {
         'code' : 'UTF-8',
         'terminology' : 'IANA_character-sets',
     }
@@ -14,6 +14,10 @@ class InformationOrder:
     language = {
         'code' : 'en',
         'terminology' : 'ISO_639-1',
+    }
+    territory = {
+        'code' : 'EN',
+        'terminology' : 'ISO_3166-1',
     }
 
     def __init__(self, composition_format='FLAT'):
@@ -69,29 +73,45 @@ class composition_context(InformationOrder):
 class composition_service(InformationOrder):
 
     def composition(self, service_data):
-        if self.composition_format == 'FLAT':
-            self.flat_composition = {
-                "gel_data_request_summary/service:0/service_name": "GEL Information data request",
-                "gel_data_request_summary/service:0/service_type": "pathology",
-                "gel_data_request_summary/service:0/time": "2018-07-01T00:00:00Z",
-            }
-            service_encoding = {
-                "gel_data_request_summary/service:0/encoding|code": "UTF-8",
-                "gel_data_request_summary/service:0/encoding|terminology": "IANA_character-sets",
-            }
-            service_ism_transition = {
-                "gel_data_request_summary/service:0/ism_transition/current_state|code": "529",
-                "gel_data_request_summary/service:0/ism_transition/current_state|terminology": "openehr",
-                "gel_data_request_summary/service:0/ism_transition/current_state|value": "scheduled",
-            }
-            service_language = {
-                "gel_data_request_summary/service:0/language|code": "en",
-                "gel_data_request_summary/service:0/language|terminology": "ISO_639-1",
-            }
-            for element in [service_encoding, service_ism_transition, service_language]:
-                self.flat_composition.update(element)
+        """
+        Service data should be supplied as an array
+        of dictionary items with the following keys:
+        data = [{
+            'service_name' : 'GEL Information data request',
+            'service_type' : 'pathology',
+            'time' : '2018-07-01T00:00:00Z',
+            'state' : ['529', 'scheduled', 'openehr'],
+        }]
+        If you wish to change the encoding and language values for the
+        service_request element, these will need to be changed in the
+        Composition's class
+        """
+        self.flat_composition = {}
+        print(len(service_data))
+        for service in range(len(service_data)):
+            if self.composition_format == 'FLAT':
+                service_service = {
+                    'gel_data_request_summary/service:' + str(service) + '/service_name' : service_data[service]['service_name'],
+                    'gel_data_request_summary/service:' + str(service) + '/service_type' : service_data[service]['service_type'],
+                    'gel_data_request_summary/service:' + str(service) + '/time' : service_data[service]['time'],
+                }
+                service_encoding = {
+                    'gel_data_request_summary/service:' + str(service) + '/encoding|code' : self.encoding['code'],
+                    'gel_data_request_summary/service:' + str(service) + '/encoding|terminology' : self.encoding['terminology'],
+                }
+                service_ism_transition = {
+                    'gel_data_request_summary/service:' + str(service) + '/ism_transition/current_state|code' : service_data[service]['state'][0],
+                    'gel_data_request_summary/service:' + str(service) + '/ism_transition/current_state|terminology' : service_data[service]['state'][2],
+                    'gel_data_request_summary/service:' + str(service) + '/ism_transition/current_state|value' : service_data[service]['state'][1],
+                }
+                service_language = {
+                    'gel_data_request_summary/service:' + str(service) + '/language|code' : self.language['code'],
+                    'gel_data_request_summary/service:' + str(service) + '/language|terminology' : self.language['terminology'],
+                }
+                for element in [service_service, service_encoding, service_ism_transition, service_language]:
+                    self.flat_composition.update(element)
 
-            return self.flat_composition
+        return self.flat_composition
 
 class composition_service_request(InformationOrder):
 
@@ -149,12 +169,14 @@ class composition_service_request(InformationOrder):
 class composition_territory(InformationOrder):
 
     def composition(self, territory_code):
-        if not territory_code:
-            territory_code = 'en'
+        """
+        Territory code values are defined in the
+        Composition's class
+        """
         if self.composition_format == 'FLAT':
             self.flat_composition = {
-                "gel_data_request_summary/territory|code": territory_code,
-                "gel_data_request_summary/territory|terminology": "iso_3166-1"
+                "gel_data_request_summary/territory|code": self.territory['code'],
+                "gel_data_request_summary/territory|terminology": self.territory['terminology']
             }
             return self.flat_composition
 
@@ -162,6 +184,9 @@ class composition_composer(InformationOrder):
 
 
     def composition(self, composer_name):
+        """
+        composer_name parameter should be provided as a string value
+        """
         if not composer_name:
             composer_name = 'openehr-py-' + self.composition_format 
         if self.composition_format == 'FLAT':
@@ -199,7 +224,22 @@ service_request_data = [
     }
 ]
 information_order.add_element(composition_service_request, service_request_data )
-information_order.add_element(composition_service, {})
+service_data = [
+    {
+        'service_name' : 'GEL Information data request',
+        'service_type' : 'cellular_pathology',
+        'time' : '2018-07-01T00:00:00Z',
+        'state' : ['529', 'scheduled', 'openehr'],
+    },
+    {
+        'service_name' : 'GEL Information data request',
+        'service_type' : 'blood sciences',
+        'time' : '2018-07-01T00:00:00Z',
+        'state' : ['529', 'scheduled', 'openehr'],
+    },
+]
+
+information_order.add_element(composition_service, service_data)
 information_order.add_element(composition_context, {})
 information_order.add_element(composition_language, {})
 information_order.add_element(composition_category, {})
