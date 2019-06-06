@@ -28,43 +28,112 @@ class InformationOrder:
 
 class composition_category(InformationOrder):
 
-    def composition(self, category_data):
+    def composition(self, data):
+        """
+        Category data should be provided as a dictionary 
+        with the following keys:
+        category_data = {
+            'code' : '433',
+            'value' : 'event',
+            'terminology' : 'openehr',
+        }
+        Default values are contained within this class
+        """
+        category_data = {
+            'code' : '433',
+            'value' : 'event',
+            'terminology' : 'openehr',
+        }
+        if data:
+            category_data.update(data)
+
         if self.composition_format == 'FLAT':
             self.flat_composition = {
-                "gel_data_request_summary/category|code": "433",
-                "gel_data_request_summary/category|terminology": "openehr",
-                "gel_data_request_summary/category|value": "event",
+                "gel_data_request_summary/category|code": category_data['code'],
+                "gel_data_request_summary/category|terminology": category_data['terminology'],
+                "gel_data_request_summary/category|value": category_data['value'],
             }
             return self.flat_composition
 
 class composition_language(InformationOrder):
 
-    def composition(self, language_data):
+    def composition(self, data):
+        """
+        Language data should be provided as a dictionary with 
+        the following keys: 
+        language_data = {
+            'code' : self.language['code'],
+            'terminology' : self.language['terminology'],
+        }
+        Language data defaults are defined in the InformationOrder class
+        """
+        language_data = {
+            'code' : self.language['code'],
+            'terminology' : self.language['terminology'],
+        }
+        if data:
+            language_data.update(data)
+
         if self.composition_format == 'FLAT':
             self.flat_composition = {
-                "gel_data_request_summary/language|code": "en",
-                "gel_data_request_summary/language|terminology": "ISO_639-1",
+                "gel_data_request_summary/language|code": language_data['code'],
+                "gel_data_request_summary/language|terminology" : language_data['terminology'],
             }
             return self.flat_composition
 
 class composition_context(InformationOrder):
 
-    def composition(self, context_data):
+    def composition(self, data):
+        """
+        Context data should be provided in a dictionary 
+        with the following keys:
+        context_data = {
+            'context' : {
+                'id' : 'UCLH',
+                'namespace' : 'UCLH-NS',
+                'scheme' : 'UCLH-SCHEME',
+                'name' : 'UCLH NHS Foundation Trust',
+            },
+            'setting' : {
+                'code' : '238',
+                'value' : 'other care',
+                'terminology' : 'openehr',
+            },
+            'start_time' : "2018-07-01T00:00:00Z",
+        }
+        Default values are defined within this class
+        """
+        context_data = {
+            'context' : {
+                'id' : 'UCLH',
+                'namespace' : 'UCLH-NS',
+                'scheme' : 'UCLH-SCHEME',
+                'name' : 'UCLH NHS Foundation Trust',
+            },
+            'setting' : {
+                'code' : '238',
+                'value' : 'other care',
+                'terminology' : 'openehr',
+            },
+            'start_time' : "2018-07-01T00:00:00Z",
+        }
+        if data:
+            context_data.update(data)
         if self.composition_format == 'FLAT':
             self.flat_composition = {}
             health_care_facility = {
-                "gel_data_request_summary/context/_health_care_facility|id": "GOSH",
-                "gel_data_request_summary/context/_health_care_facility|id_namespace": "GOSH-NS",
-                "gel_data_request_summary/context/_health_care_facility|id_scheme": "GOSH-SCHEME",
-                "gel_data_request_summary/context/_health_care_facility|name": "Great Ormond Street",
+                "gel_data_request_summary/context/_health_care_facility|id": context_data['context']['id'],
+                "gel_data_request_summary/context/_health_care_facility|id_namespace": context_data['context']['namespace'],
+                "gel_data_request_summary/context/_health_care_facility|id_scheme": context_data['context']['scheme'],
+                "gel_data_request_summary/context/_health_care_facility|name": context_data['context']['name'],
             }
             setting = {
-                "gel_data_request_summary/context/setting|code": "238",
-                "gel_data_request_summary/context/setting|terminology": "openehr",
-                "gel_data_request_summary/context/setting|value": "other care",
+                "gel_data_request_summary/context/setting|code": context_data['setting']['code'],
+                "gel_data_request_summary/context/setting|terminology": context_data['setting']['terminology'],
+                "gel_data_request_summary/context/setting|value": context_data['setting']['value'],
             }
             context_start_time = {
-                "gel_data_request_summary/context/start_time": "2018-07-01T00:00:00Z",
+                "gel_data_request_summary/context/start_time": context_data['start_time'],
             }
             for element in [health_care_facility, setting, context_start_time]:
                 self.flat_composition.update(element)
@@ -72,7 +141,7 @@ class composition_context(InformationOrder):
 
 class composition_service(InformationOrder):
 
-    def composition(self, service_data):
+    def composition(self, data):
         """
         Service data should be supplied as an array
         of dictionary items with the following keys:
@@ -82,12 +151,17 @@ class composition_service(InformationOrder):
             'time' : '2018-07-01T00:00:00Z',
             'state' : ['529', 'scheduled', 'openehr'],
         }]
-        If you wish to change the encoding and language values for the
-        service_request element, these will need to be changed in the
-        Composition's class
+        No default values are defined for the above items.
+        Default values for encoding and language elements are
+        defined in the InformationOrder class
         """
+        service_data = []
+        if data:
+            service_data = data
+        else:
+            print('No Service data provided')
+
         self.flat_composition = {}
-        print(len(service_data))
         for service in range(len(service_data)):
             if self.composition_format == 'FLAT':
                 service_service = {
@@ -115,7 +189,7 @@ class composition_service(InformationOrder):
 
 class composition_service_request(InformationOrder):
 
-    def composition(self, request_data):
+    def composition(self, data):
         """
         Service Request data should be supplied as an array 
         of dictionary items with the following keys:
@@ -129,10 +203,16 @@ class composition_service_request(InformationOrder):
             'request_end' :  "2018-01-01T00:00:00Z",
             'request_date' : "2018-07-01T00:00:00",
         }]
-        If you wish to change the encoding and language values for the
-        service_request element, these will need to be changed in the 
-        Composition's class
+        No default values are defined for the above items.
+        Default values for encoding and language elements are
+        defined in the InformationOrder class
         """
+        request_data = []
+        if data:
+            request_data = data
+        else:
+            print('No Service Request data provided')
+
         self.flat_composition = {}
         for request in range(len(request_data)):
             if self.composition_format == 'FLAT':
@@ -168,15 +248,27 @@ class composition_service_request(InformationOrder):
 
 class composition_territory(InformationOrder):
 
-    def composition(self, territory_code):
+    def composition(self, data):
         """
-        Territory code values are defined in the
-        Composition's class
+        Territory data should be provided as a dictionary with 
+        the following keys: 
+        territory = {
+            'code' : 'EN',
+            'terminology' : 'ISO_3166-1',
+        }
+        Territory data defaults are defined in the InformationOrder class
         """
+        territory = {
+            'code' : self.territory['code'],
+            'terminology' : self.territory['terminology'],
+        }
+        if data:
+            territory.update(data)
+
         if self.composition_format == 'FLAT':
             self.flat_composition = {
-                "gel_data_request_summary/territory|code": self.territory['code'],
-                "gel_data_request_summary/territory|terminology": self.territory['terminology']
+                "gel_data_request_summary/territory|code": territory['code'],
+                "gel_data_request_summary/territory|terminology": territory['terminology']
             }
             return self.flat_composition
 
@@ -186,6 +278,7 @@ class composition_composer(InformationOrder):
     def composition(self, composer_name):
         """
         composer_name parameter should be provided as a string value
+        Default value set to the name of the generating class function
         """
         if not composer_name:
             composer_name = 'openehr-py-' + self.composition_format 
@@ -200,6 +293,9 @@ class composition_composer(InformationOrder):
 information_order = InformationOrder('FLAT')
 information_order.add_element(composition_composer, None)
 information_order.add_element(composition_territory, None)
+information_order.add_element(composition_context, None)
+information_order.add_element(composition_language, None)
+information_order.add_element(composition_category, None)
 
 service_request_data = [
     {
@@ -224,6 +320,7 @@ service_request_data = [
     }
 ]
 information_order.add_element(composition_service_request, service_request_data )
+
 service_data = [
     {
         'service_name' : 'GEL Information data request',
@@ -238,10 +335,7 @@ service_data = [
         'state' : ['529', 'scheduled', 'openehr'],
     },
 ]
-
 information_order.add_element(composition_service, service_data)
-information_order.add_element(composition_context, {})
-information_order.add_element(composition_language, {})
-information_order.add_element(composition_category, {})
+
 print( json.dumps(information_order.composition, sort_keys=True, indent=4) )
 
