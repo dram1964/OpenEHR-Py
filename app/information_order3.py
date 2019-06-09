@@ -15,7 +15,7 @@ class category():
         },
     ]
 
-    codes = {
+    lookup = {
             '433' : {'|code' : '433', '|value' : 'event1', '|terminology' : 'openehr' },
             '434' : {'|code' : '434', '|value' : 'event2', '|terminology' : 'openehr' },
             '435' : {'|code' : '435', '|value' : 'event3', '|terminology' : 'openehr' },
@@ -24,14 +24,16 @@ class category():
 
     def __init__(self, data=None):
         if data:
+            # clear default values
             self.code, self.value, self.terminology, self.composition = [], [], [], []
             for item in data:
-                self.code.append( self.codes[item]['|code'] )
-                self.value.append( self.codes[item]['|value'] )
-                self.terminology.append( self.codes[item]['|terminology'] )
-                self.composition.append( self.codes[item] )
+                self.code.append( self.lookup[item]['|code'] )
+                self.value.append( self.lookup[item]['|value'] )
+                self.terminology.append( self.lookup[item]['|terminology'] )
+                self.composition.append( self.lookup[item] )
 
     def read(self, data):
+        # clear default values
         self.code, self.value, self.terminology, self.composition = [], [], [], []
         for item in data:
             self.code.append( item['|code'] )
@@ -93,6 +95,7 @@ class TestSuite:
         """
         Create information order with category and composer defaulted
         """
+        print('*** (11): Create Information Order and use defaults for composition')
         i_order = InformationOrder()
         i_order.compose()
         print(i_order.composition)
