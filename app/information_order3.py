@@ -4,10 +4,16 @@ class category():
 
     __name__ = 'category'
 
-    code = []
-    value = []
-    terminology = []
-    composition = []
+    code = ['433']
+    value = ['event']
+    terminology = ['openehr']
+    composition = [
+        {
+            "|code": "433",
+            "|terminology": "openehr",
+            "|value": "event"
+        },
+    ]
 
     codes = {
             '433' : {'|code' : '433', '|value' : 'event1', '|terminology' : 'openehr' },
@@ -18,6 +24,7 @@ class category():
 
     def __init__(self, data=None):
         if data:
+            self.code, self.value, self.terminology, self.composition = [], [], [], []
             for item in data:
                 self.code.append( self.codes[item]['|code'] )
                 self.value.append( self.codes[item]['|value'] )
@@ -25,6 +32,7 @@ class category():
                 self.composition.append( self.codes[item] )
 
     def read(self, data):
+        self.code, self.value, self.terminology, self.composition = [], [], [], []
         for item in data:
             self.code.append( item['|code'] )
             self.value.append( item['|value'] )
@@ -34,16 +42,25 @@ class category():
 class composer():
         __name__ = 'composer'
 
-        name = []
-        composition = []
+        name = ['William Shakespeare']
+        composition = [
+            {
+                "|name": "William Shakespeare"
+            },
+        ]
 
         def __init__(self, data=None):
             if data:
+                # remove default values
+                self.name = []
+                self.composition = []
                 for item in data:
                     self.name.append( item )
                     self.composition.append( { '|name' : item } )
 
         def read(self, data):
+            self.name = []
+            self.composition = []
             for item in data:
                 self.name.append( item['|name'] )
                 self.composition.append( item )
@@ -52,14 +69,14 @@ class InformationOrder():
     """
     """
     document_root = 'gel_information_summary_request'
-    composition = { document_root : {} }
     category = category()
     composer = composer()
+    composition = { document_root : {} }
 
-    def set_property(self, data):
-        my_property = data.__name__
-        self.property = data
-        self.composition[self.document_root][my_property] = data.composition
+    def compose(self):
+        for item in ( 'category', 'composer'):
+            obj_name = getattr(self, item)
+            self.composition[self.document_root][item] = obj_name.composition
 
     def read(self, data):
         self.document_root = list(data.keys())[0]
@@ -77,23 +94,26 @@ class TestSuite:
         Create information order with category and composer defaulted
         """
         i_order = InformationOrder()
+        i_order.compose()
         print(i_order.composition)
 
     def test1():
         """
         Write category composition from category data
         """
-        cat1 = category(['433', '434'])
-        print(cat1.code)
-        print(cat1.value)
-        print(cat1.terminology)
-        print(cat1.composition)
+        categories = ['433', '434']
+        print('*** (1): Write categories composition from array of category codes', categories)
+        cat1 = category(categories)
+        print('Category codes:', cat1.code)
+        print('Category values:', cat1.value)
+        print('Category terminologies:', cat1.terminology)
+        print('Category composition:', cat1.composition)
 
     def test2():
         """
         Read category data from category composition
         """
-        data = [
+        categories = [
             {
                 "|code": "433",
                 "|terminology": "openehr",
@@ -105,31 +125,35 @@ class TestSuite:
                 "|value": "event5"
             }
         ]
-        cat2 = category()
-        cat2.read(data)
-        print(cat2.code)
-        print(cat2.value)
-        print(cat2.terminology)
-        print(cat2.composition)
+        print('*** (2): Read category data from category composition', categories)
+        cat1 = category()
+        cat1.read(categories)
+        print('Category codes:', cat1.code)
+        print('Category values:', cat1.value)
+        print('Category terminologies:', cat1.terminology)
+        print('Category composition:', cat1.composition)
 
     def test3():
         """
         Create information order
         """
+        print('*** (3): Create Information Order with no data')
         i_order = InformationOrder()
-        print(i_order.document_root)
-        print(i_order.composition)
+        print('Document Root:', i_order.document_root)
+        print('Information Order composition', i_order.composition)
 
     def test4():
         """
         Create information order and add category data
         """
+        categories = ['433', '434']
+        print('*** (4): Create Information Order with category codes array', categories)
         i_order = InformationOrder()
-        cat = category(['433', '435'])
-        i_order.set_property(cat)
-        print(i_order.category.code)
-        print(i_order.category.composition)
-        print(i_order.composition)
+        i_order.category = category(categories)
+        i_order.compose()
+        print('Information Order category:', i_order.category)
+        print('Information Order category codes:', i_order.category.code)
+        print('Information Order composition:', i_order.composition)
 
 
     def test5():
@@ -137,7 +161,7 @@ class TestSuite:
         Create information order from composition
         containing category data
         """
-        data = {
+        categories = {
             "gel_data_request_summary": {
                 "category": [
                     {
@@ -153,23 +177,27 @@ class TestSuite:
                 ],
             }
         }
+        print('*** (5): Create Information Order and read in category composition:', categories)
         i_order = InformationOrder()
-        i_order.read(data)
-        print(i_order.composition)
+        i_order.read(categories)
+        print('Information Order category code', i_order.category.code)
+        print('Information Order composition:', i_order.composition)
 
     def test6():
         """
         Write composer composition from composer data
         """
-        compos = composer(['David Ramlakhan', 'John Bunyan'])
-        print(compos.name)
-        print(compos.composition)
+        composers = ['David Ramlakhan', 'John Bunyan']
+        compos = composer(composers)
+        print('*** (6): Create composer composition from composer name array:', composers)
+        print('Composer names:', compos.name)
+        print('Composer composition:', compos.composition)
 
     def test7():
         """
         Read composer data from composer composition
         """
-        data = [
+        composers = [
             {
                 "|name": "William Shakespeare"
             },
@@ -177,21 +205,24 @@ class TestSuite:
                 "|name": "John Milton"
             },
         ]
+        print('*** (7): Create composer object from composer composition:', composers)
         compos = composer()
-        compos.read(data)
-        print(compos.name)
-        print(compos.composition)
+        compos.read(composers)
+        print('Composer names:', compos.name)
+        print('Composer composition:', compos.composition)
 
     def test8():
         """
         Create information order and add composer data
         """
+        composers = ['David Ramlakhan', 'John Bunyan']
+        print('*** (8): Create information order and add composer data', composers)
         i_order = InformationOrder()
-        compos = composer(['David Ramlakhan', 'John Bunyan'])
-        i_order.set_property(composer)
-        print(i_order.composer.name)
-        print(i_order.composer.composition)
-        print(i_order.composition)
+        i_order.composer = composer(composers)
+        i_order.compose()
+        print('Information Order composer names:', i_order.composer.name)
+        print('Information Order composer composition:', i_order.composer.composition)
+        print('Information Order composition:', i_order.composition)
 
     def test9():
         """
@@ -222,27 +253,30 @@ class TestSuite:
                 ]
             }
         }
+        print('*** (9): Create Information Order and read category and composer data from composition', data)
         i_order = InformationOrder()
         i_order.read(data)
-        print(i_order.document_root)
-        print(i_order.category)
-        print(i_order.composer)
-        print(i_order.composition)
+        print('Information Order document root:', i_order.document_root)
+        print('Information Order category:', i_order.category)
+        print('Information Order composer:', i_order.composer)
+        print('Information Order composition', i_order.composition)
 
     def test10():
         """
         Create information order and add category data and composer data
         """
         i_order = InformationOrder()
-        cat = category(['433', '435'])
-        compos = composer(['David Ramlakhan', 'John Bunyan'])
-        i_order.set_property(cat)
-        i_order.set_property(compos)
-        print(i_order.category.code)
-        print(i_order.category.composition)
-        print(i_order.composer.name)
-        print(i_order.composer.composition)
-        print(i_order.composition)
+        categories = ['433', '435']
+        composers = ['David Ramlakhan', 'John Bunyan']
+        print('*** (10): Add category and composer data to Information Order from arrays', categories, composers)
+        i_order.category = category(categories)
+        i_order.composer = composer(composers)
+        i_order.compose()
+        print('Information Order category codes:', i_order.category.code)
+        print('Information Order category composition:', i_order.category.composition)
+        print('Information Order composer names', i_order.composer.name)
+        print('Information Order composer composition', i_order.composer.composition)
+        print('Information Order composition', i_order.composition)
 
 
 if __name__ == '__main__':
